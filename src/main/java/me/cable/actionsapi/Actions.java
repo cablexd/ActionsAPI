@@ -53,7 +53,11 @@ public class Actions {
         return this;
     }
 
-    public void run(@NotNull CommandSender commandSender) {
+    public void run(@Nullable CommandSender commandSender) {
+        if (commandSender == null) {
+            commandSender = Bukkit.getConsoleSender();
+        }
+
         for (String string : actionStrings) {
             for (Entry<String, String> entry : placeholders.entrySet()) {
                 String key = entry.getKey();
@@ -67,7 +71,7 @@ public class Actions {
     }
 
     public void run() {
-        run(Bukkit.getConsoleSender());
+        run((CommandSender) null);
     }
 
     // runs player actions for each player and console actions for the console
