@@ -1,12 +1,13 @@
 package me.cable.actionsapi;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public final class ActionsAPI {
+public class ActionsAPI {
 
     private static final Set<Action> actions = new HashSet<>();
 
@@ -23,11 +24,11 @@ public final class ActionsAPI {
         AapiMain.getInstance().getLogger().info("Action \"" + label + "\" has been registered");
     }
 
-    private static @NotNull String formatLabel(@NotNull String string) {
+    private @NotNull String formatLabel(@NotNull String string) {
         return '[' + string + ']';
     }
 
-    private static @Nullable Action getAction(@NotNull String formattedLabel) {
+    private @Nullable Action getAction(@NotNull String formattedLabel) {
         for (Action action : actions) {
             String label = action.label();
 
@@ -44,7 +45,7 @@ public final class ActionsAPI {
      * @param commandSender the sender executing
      * @return if the action was found or not
      */
-    public static boolean run(@NotNull String string, @Nullable CommandSender commandSender) {
+    public boolean run(@NotNull String string, @NotNull CommandSender commandSender) {
         // args
 
         String[] argsWithLabel = string.split("\\s+"); // split by groups of whitespace
@@ -57,19 +58,12 @@ public final class ActionsAPI {
 
         // run action
 
-        if (commandSender != null) {
-            string = string.replace("{sender}", commandSender.getName()); // sender placeholder
-        }
+        string = string.replace("{sender}", commandSender.getName()); // sender placeholder
 
         String[] argsWithoutLabel = Arrays.copyOfRange(argsWithLabel, 1, argsWithLabel.length);
         String raw = string.substring(label.length()).stripLeading();
 
-        if (commandSender == null) {
-            action.run(argsWithoutLabel, raw);
-        } else {
-            action.run(commandSender, argsWithLabel, raw);
-        }
-
+        action.run(commandSender, argsWithoutLabel, raw);
         return true;
     }
 }

@@ -2,6 +2,7 @@ package me.cable.actionsapi.provided;
 
 import me.cable.actionsapi.Action;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +14,7 @@ public class ConsoleAction extends Action {
     }
 
     @Override
-    public void run(@NotNull Player player, @NotNull String[] args, @NotNull String raw) {
+    public void run(@NotNull CommandSender commandSender, @NotNull String[] args, @NotNull String raw) {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), raw);
     }
 }

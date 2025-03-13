@@ -1,5 +1,6 @@
 package me.cable.actionsapi;
 
+import org.bukkit.block.CommandBlock;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -24,10 +25,6 @@ public abstract class Action {
 
     public final @NotNull String label() {
         return label;
-    }
-
-    public void run(@NotNull String[] args, @NotNull String raw) {
-
     }
 
     public void run(@NotNull CommandSender commandSender, @NotNull String[] args, @NotNull String raw) {

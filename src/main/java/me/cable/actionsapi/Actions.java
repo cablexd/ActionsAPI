@@ -1,5 +1,6 @@
 package me.cable.actionsapi;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -11,21 +12,21 @@ import java.util.function.Function;
 
 public class Actions {
 
-    private final List<String> strings;
+    private final List<String> actionStrings;
 
     private final Map<String, String> placeholders = new HashMap<>();
     private final Map<String, Function<Player, Object>> playerPlaceholders = new HashMap<>();
 
-    public Actions(@NotNull List<String> strings) {
-        this.strings = new ArrayList<>(strings);
+    public Actions(@NotNull List<String> actionStrings) {
+        this.actionStrings = new ArrayList<>(actionStrings);
     }
 
     public Actions() {
-        strings = new ArrayList<>();
+        actionStrings = new ArrayList<>();
     }
 
     public void add(@NotNull String string) {
-        strings.add(string);
+        actionStrings.add(string);
     }
 
     public @NotNull Actions placeholder(@Nullable String key, @Nullable Object val) {
@@ -52,10 +53,8 @@ public class Actions {
         return this;
     }
 
-    public boolean run(@Nullable CommandSender commandSender) {
-        boolean success = true;
-
-        for (String string : strings) {
+    public void run(@NotNull CommandSender commandSender) {
+        for (String string : actionStrings) {
             for (Entry<String, String> entry : placeholders.entrySet()) {
                 String key = entry.getKey();
                 String val = entry.getValue();
@@ -63,49 +62,42 @@ public class Actions {
                 string = string.replace('{' + key + '}', val);
             }
 
-            success &= ActionsAPI.run(string, commandSender);
+            AapiMain.getInstance().getActionsAPI().run(string, commandSender);
         }
-
-        return success;
     }
 
-    // runs the actions for each player while only running global actions once
+    public void run() {
+        run(Bukkit.getConsoleSender());
+    }
+
+    // runs player actions for each player and console actions for the console
     public void run(@NotNull List<Player> players) {
-        List<String> playerActions = new ArrayList<>();
-        List<String> globalActions = new ArrayList<>();
+        for (String string : actionStrings) {
+            switch (string.charAt(0)) {
+                case 'c' -> { // console action
+                    for (Entry<String, String> entry : placeholders.entrySet()) {
+                        string = string.replace('{' + entry.getKey() + '}', entry.getValue());
+                    }
 
-        // get global and player actions
-        for (String string : strings) {
-            if (string.startsWith("g")) {
-                globalActions.add(string.substring(1).stripLeading());
-            } else {
-                playerActions.add(string);
-            }
-        }
-
-        for (Player player : players) {
-            for (String string : playerActions) {
-                for (Entry<String, String> entry : placeholders.entrySet()) {
-                    string = string.replace('{' + entry.getKey() + '}', entry.getValue());
+                    AapiMain.getInstance().getActionsAPI().run(string, Bukkit.getConsoleSender());
                 }
-                for (Entry<String, Function<Player, Object>> entry : playerPlaceholders.entrySet()) {
-                    Object value = entry.getValue().apply(player);
+                case 'p' -> { // player action
+                    for (Player player : players) {
+                        for (Entry<String, String> entry : placeholders.entrySet()) {
+                            string = string.replace('{' + entry.getKey() + '}', entry.getValue());
+                        }
+                        for (Entry<String, Function<Player, Object>> entry : playerPlaceholders.entrySet()) {
+                            Object value = entry.getValue().apply(player);
 
-                    if (value != null) {
-                        string = string.replace('{' + entry.getKey() + '}', value.toString());
+                            if (value != null) {
+                                string = string.replace('{' + entry.getKey() + '}', value.toString());
+                            }
+                        }
+
+                        AapiMain.getInstance().getActionsAPI().run(string, player);
                     }
                 }
-
-                ActionsAPI.run(string, player);
             }
-        }
-
-        for (String string : globalActions) {
-            for (Entry<String, String> entry : placeholders.entrySet()) {
-                string = string.replace('{' + entry.getKey() + '}', entry.getValue());
-            }
-
-            ActionsAPI.run(string, null);
         }
     }
 }

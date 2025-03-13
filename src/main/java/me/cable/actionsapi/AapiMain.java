@@ -10,10 +10,12 @@ public final class AapiMain extends JavaPlugin {
         return JavaPlugin.getPlugin(AapiMain.class);
     }
 
+    private ActionsAPI actionsAPI;
+
     @Override
     public void onEnable() {
+        actionsAPI = new ActionsAPI();
         registerProvidedActions();
-        getLogger().info(getName() + " provided actions have been registered");
     }
 
     private void registerProvidedActions() {
@@ -26,5 +28,11 @@ public final class AapiMain extends JavaPlugin {
         new MessageAction().register();
         new MessageAction().register();
         new SoundAction().register();
+
+        getLogger().info(getName() + " provided actions have been registered");
+    }
+
+    public ActionsAPI getActionsAPI() {
+        return actionsAPI;
     }
 }
