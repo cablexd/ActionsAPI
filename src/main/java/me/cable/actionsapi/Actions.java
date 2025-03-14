@@ -77,29 +77,30 @@ public class Actions {
     // runs player actions for each player and console actions for the console
     public void run(@NotNull List<Player> players) {
         for (String string : actionStrings) {
-            switch (string.charAt(0)) {
-                case 'c' -> { // console action
+            String flags = string.substring(0, string.indexOf(" "));
+            string = string.substring(string.indexOf(" ")).stripLeading();
+
+            if (flags.contains("c")) {
+                for (Entry<String, String> entry : placeholders.entrySet()) {
+                    string = string.replace('{' + entry.getKey() + '}', entry.getValue());
+                }
+
+                AapiMain.getInstance().getActionsAPI().run(string, Bukkit.getConsoleSender());
+            }
+            if (flags.contains("p")) {
+                for (Player player : players) {
                     for (Entry<String, String> entry : placeholders.entrySet()) {
                         string = string.replace('{' + entry.getKey() + '}', entry.getValue());
                     }
+                    for (Entry<String, Function<Player, Object>> entry : playerPlaceholders.entrySet()) {
+                        Object value = entry.getValue().apply(player);
 
-                    AapiMain.getInstance().getActionsAPI().run(string, Bukkit.getConsoleSender());
-                }
-                case 'p' -> { // player action
-                    for (Player player : players) {
-                        for (Entry<String, String> entry : placeholders.entrySet()) {
-                            string = string.replace('{' + entry.getKey() + '}', entry.getValue());
+                        if (value != null) {
+                            string = string.replace('{' + entry.getKey() + '}', value.toString());
                         }
-                        for (Entry<String, Function<Player, Object>> entry : playerPlaceholders.entrySet()) {
-                            Object value = entry.getValue().apply(player);
-
-                            if (value != null) {
-                                string = string.replace('{' + entry.getKey() + '}', value.toString());
-                            }
-                        }
-
-                        AapiMain.getInstance().getActionsAPI().run(string, player);
                     }
+
+                    AapiMain.getInstance().getActionsAPI().run(string, player);
                 }
             }
         }
