@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SoundAction extends Action {
 
+    // [sound] <volume> <pitch> <global>
     public SoundAction() {
         super("sound");
     }
@@ -21,18 +22,12 @@ public class SoundAction extends Action {
 
         /* Sound */
 
-        String soundName = args[0];
-        Sound sound = null;
+        Sound sound;
 
-        for (Sound a : Sound.values()) {
-            if (a.toString().endsWith(soundName)) {
-                if (sound != null) return; // ambiguous: don't play sound
-                sound = a;
-            }
-        }
-
-        if (sound == null) {
-            return;
+        try {
+            sound = Sound.valueOf(args[0]);
+        } catch (IllegalArgumentException e) {
+            return; // invalid sound
         }
 
         /* Volume */
