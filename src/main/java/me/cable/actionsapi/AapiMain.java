@@ -26,7 +26,6 @@ public final class AapiMain extends JavaPlugin {
         new ConsoleAction().register();
         new ExperienceAction().register();
         new MessageAction().register();
-        new MessageAction().register();
         new SoundAction().register();
 
         getLogger().info(getName() + " provided actions have been registered");
