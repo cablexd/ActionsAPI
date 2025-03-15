@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ActionbarAction extends Action {
 
+    // [actionbar] text
     public ActionbarAction() {
         super("actionbar");
     }
