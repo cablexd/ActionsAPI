@@ -119,6 +119,9 @@ public class Actions {
     private void runInternal(@Nullable Player target, @NotNull List<Player> players) {
         for (String string : actionStrings) {
             // apply placeholders
+            if (target != null && !placeholders.containsKey("player")) {
+                string = string.replace("{player}", target.getName());
+            }
             for (Entry<String, String> entry : placeholders.entrySet()) {
                 string = string.replace('{' + entry.getKey() + '}', entry.getValue());
             }
