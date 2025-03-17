@@ -11,7 +11,7 @@ public class CloseInventoryAction extends Action {
     }
 
     @Override
-    public void run(@NotNull Player player, @NotNull String[] arg, @NotNull String raw) {
+    public void run(@NotNull Player player, @NotNull String[] args, @NotNull String raw) {
         player.closeInventory();
     }
 }

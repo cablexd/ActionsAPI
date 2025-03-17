@@ -1,6 +1,5 @@
 package me.cable.actionsapi;
 
-import org.bukkit.block.CommandBlock;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -35,11 +34,11 @@ public abstract class Action {
         }
     }
 
-    public void run(@NotNull ConsoleCommandSender consoleCommandSender, @NotNull String[] arg, @NotNull String raw) {
+    public void run(@NotNull ConsoleCommandSender consoleCommandSender, @NotNull String[] args, @NotNull String raw) {
 
     }
 
-    public void run(@NotNull Player player, @NotNull String[] arg, @NotNull String raw) {
+    public void run(@NotNull Player player, @NotNull String[] args, @NotNull String raw) {
 
     }
 }

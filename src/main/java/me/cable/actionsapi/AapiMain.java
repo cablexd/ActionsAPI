@@ -25,6 +25,7 @@ public final class AapiMain extends JavaPlugin {
         new CommandAction().register();
         new ConsoleAction().register();
         new ExperienceAction().register();
+        new FillAction().register();
         new MessageAction().register();
         new SoundAction().register();
 

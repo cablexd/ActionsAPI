@@ -15,7 +15,7 @@ public class ActionbarAction extends Action {
     }
 
     @Override
-    public void run(@NotNull Player player, @NotNull String[] arg, @NotNull String raw) {
+    public void run(@NotNull Player player, @NotNull String[] args, @NotNull String raw) {
         String message = Utils.format(raw);
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(message));
     }
