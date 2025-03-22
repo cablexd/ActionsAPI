@@ -60,7 +60,7 @@ public class ActionsAPI {
         string = string.replace("{sender}", commandSender.getName()); // sender placeholder
 
         String[] argsWithoutLabel = Arrays.copyOfRange(argsWithLabel, 1, argsWithLabel.length);
-        String raw = string.substring(label.length()).stripLeading();
+        String raw = string.substring(Math.min(label.length() + 1, string.length()));
 
         action.run(commandSender, argsWithoutLabel, raw);
         return true;
